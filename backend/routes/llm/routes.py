@@ -1,7 +1,8 @@
 
 from fastapi import APIRouter
-from ..llm.models import Prompt
-from ..llm.services import get_tech_stack
+from ..llm.models import Prompt,IncomingTechStack
+from ..llm.services import get_tech_stack,create_timeline
+
 
 router = APIRouter(
     prefix='/llm',
@@ -15,4 +16,7 @@ def get_llm_output(prompt: Prompt):
     result = get_tech_stack(input)
     return result
 
-
+@router.post('/timeline')
+def fetch_timeline(stack: IncomingTechStack):
+    response = create_timeline(stack)
+    return response

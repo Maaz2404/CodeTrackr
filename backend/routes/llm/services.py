@@ -14,10 +14,20 @@ prompt_template = ChatPromptTemplate.from_messages(
     [('system',system_template),('human',"{text}")]
 )
 
+def ensure_list(value):
+    if isinstance(value, list):
+        return value
+    if isinstance(value, str):
+        return [value]
+    return []
 
 def get_tech_stack(input:str,model=structured_model):
     prompt = prompt_template.invoke({'text':input})
     result = model.invoke(prompt)
+    result.frontend = ensure_list(result.frontend)
+    result.backend = ensure_list(result.backend)
+    result.database = ensure_list(result.database)
+    result.infra = ensure_list(result.infra)
     return result
 
 def create_timeline(stack: IncomingTechStack,model=model):

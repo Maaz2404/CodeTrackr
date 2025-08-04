@@ -7,6 +7,7 @@ import { useState } from "react"
 import axios from "axios"
 
 
+
 function App() {
   const [frontend,setFrontend] = useState([]);
   const [backend,setBackend] = useState([]);
@@ -21,12 +22,14 @@ function App() {
   const [selectedDatabase, setSelectedDatabase] = useState([]);
   const [selectedInfra, setSelectedInfra] = useState([]);
   const [hours,setHours] = useState(1)
+  const [loadingStack, setLoadingStack] = useState(false);
 
 
 
   const baseURL = "http://127.0.0.1:8000/";
 
   function fetchTeckStack() {
+    setLoadingStack(true);
     axios.post(baseURL + "llm/",{
       "prompt":`${input}`
     }, {
@@ -41,7 +44,9 @@ function App() {
       setInfra(data.infra)
     }).catch((error)=>{
       console.error("There was an error fetching LLM response", error);
-    }) 
+    }).finally(() => {
+      setLoadingStack(false);
+    } )
   }
   
   
@@ -58,14 +63,17 @@ function App() {
         <ChatBox setInput={setInput}/>
         <Buttons setInput={setInput} fetchTeckStack={fetchTeckStack}/>
         {loading && (
-            <div className="flex justify-center items-center animate-spin w-12 h-12 border-4 border-t-4 border-gray-200 border-t-blue-500  rounded-full">
-              <span className="text-white">Loading</span>
-             </div> )}
+            <div className="absolute inset-0 flex justify-center items-center z-50">
+              <div className="animate-spin w-24 h-24 border-8 border-t-8 border-gray-200 border-t-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-xl absolute">Loading</span>
+              </div>
+            </div>
+          )}
         {!showTimeline && !loading  && (
         <><TechStack frontend={frontend} backend={backend} database={database} infra={infra} 
            selectedBackend={selectedBackend} selectedFrontend={selectedFrontend} selectedDatabase={selectedDatabase}
            selectedInfra={selectedInfra} frontendSelector={setSelectedFrontend} backendSelector={setSelectedBackend}
-           databaseSelector={setSelectedDatabase} infraSelector={setSelectedInfra}  />
+           databaseSelector={setSelectedDatabase} infraSelector={setSelectedInfra} loading={loadingStack} />
         <div className="flex flex-col items-center my-5">
           <label className="text-white text-lg mx-5 text-center" htmlFor="slider">
             Hours per day

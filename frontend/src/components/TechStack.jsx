@@ -1,5 +1,5 @@
-
-
+'use client';
+import  {Spinner}  from '@/components/ui/shadcn-io/spinner';
 
 function TechStack({
   frontend,
@@ -13,9 +13,9 @@ function TechStack({
   frontendSelector,
   backendSelector,
   databaseSelector,
-  infraSelector
+  infraSelector,
+  loading
 }) {
-  // Helper for checkbox logic
   const handleCheckbox = (selected, setter, tech) => e => {
     if (e.target.checked) {
       setter([...selected, tech]);
@@ -23,60 +23,100 @@ function TechStack({
       setter(selected.filter(item => item !== tech));
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center mt-5 gap-4">
-      <div className="p-2 h-50 w-50 bg-gray-950 rounded-2xl ">
+      {/* Frontend */}
+      <div className="p-3 h-52 w-48 bg-gray-950 rounded-2xl flex flex-col">
         <h3 className="text-white text-center mb-3">Frontend</h3>
-        {frontend && frontend.map((tech, index) => (
-          <div className="flex p-2 overflow-y-auto bg-gray-800 justify-between" key={index}>
-            <ul className="text-white">{tech}</ul>
-            <input
-              type="checkbox"
-              checked={selectedFrontend.includes(tech)}
-              onChange={handleCheckbox(selectedFrontend, frontendSelector, tech)}
-            />
-          </div>
-        ))}
+        {loading && (
+            <div className='flex justify-center text-amber-50 items-center h-full'>
+              
+              <Spinner />
+            </div>
+          )}
+
+        <div className="flex-1 flex flex-col overflow-y-auto">
+          
+          {frontend && frontend.map((tech, index) => (
+            <div className="flex p-2 bg-gray-800 justify-between" key={index}>
+              <span className="text-white flex overflow-x-auto">{tech}</span>
+              <input
+                type="checkbox"
+                checked={selectedFrontend.includes(tech)}
+                onChange={handleCheckbox(selectedFrontend, frontendSelector, tech)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="p-2 h-50 w-50 bg-gray-950 rounded-2xl ">
+      {/* Backend */}
+      <div className="p-3 h-52 w-48 bg-gray-950 rounded-2xl flex flex-col">
         <h3 className="text-white text-center mb-3">Backend</h3>
-        {backend && backend.map((tech, index) => (
-          <div className="flex p-2 overflow-y-auto bg-gray-800 justify-between" key={index}>
-            <ul className="text-white">{tech}</ul>
-            <input
-              type="checkbox"
-              checked={selectedBackend.includes(tech)}
-              onChange={handleCheckbox(selectedBackend, backendSelector, tech)}
-            />
-          </div>
-        ))}
+        {loading && (
+            <div className='flex justify-center text-amber-50 items-center h-full'>
+              
+              <Spinner />
+            </div>
+          )}
+        <div className="flex-1 flex flex-col overflow-y-auto">
+          {backend && backend.map((tech, index) => (
+            <div className="flex p-2 bg-gray-800 justify-between" key={index}>
+              <span className="text-white">{tech}</span>
+              <input
+                type="checkbox"
+                checked={selectedBackend.includes(tech)}
+                onChange={handleCheckbox(selectedBackend, backendSelector, tech)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="p-2 h-50 w-50 bg-gray-950 rounded-2xl ">
+      {/* Database */}
+      <div className="p-3 h-52 w-48 bg-gray-950 rounded-2xl flex flex-col">
         <h3 className="text-white text-center mb-3">Database</h3>
-        {database && database.map((tech, index) => (
-          <div className="flex p-2 overflow-y-auto bg-gray-800 justify-between" key={index}>
-            <ul className="text-white">{tech}</ul>
-            <input
-              type="checkbox"
-              checked={selectedDatabase.includes(tech)}
-              onChange={handleCheckbox(selectedDatabase, databaseSelector, tech)}
-            />
-          </div>
-        ))}
+        {loading && (
+            <div className='flex justify-center text-amber-50 items-center h-full'>
+              
+              <Spinner />
+            </div>
+          )}
+        <div className="flex-1 flex flex-col overflow-y-auto">
+          
+          {database && database.map((tech, index) => (
+            <div className="flex p-2 bg-gray-800 justify-between" key={index}>
+              <span className="text-white">{tech}</span>
+              <input
+                type="checkbox"
+                checked={selectedDatabase.includes(tech)}
+                onChange={handleCheckbox(selectedDatabase, databaseSelector, tech)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="p-2 h-50 w-50 bg-gray-950 rounded-2xl ">
+      {/* Infra */}
+      <div className="p-3 h-52 w-48 bg-gray-950 rounded-2xl flex flex-col">
         <h3 className="text-white text-center mb-3">Infra</h3>
-        {infra && infra.map((tech, index) => (
-          <div className="flex p-2 overflow-y-auto bg-gray-800 justify-between" key={index}>
-            <ul className="text-white">{tech}</ul>
-            <input
-              type="checkbox"
-              checked={selectedInfra.includes(tech)}
-              onChange={handleCheckbox(selectedInfra, infraSelector, tech)}
-            />
-          </div>
-        ))}
+        {loading && (
+            <div className='flex justify-center text-amber-50 items-center h-full'>
+              
+              <Spinner />
+            </div>
+          )}
+        <div className="flex-1 flex flex-col overflow-y-auto">
+          {infra && infra.map((tech, index) => (
+            <div className="flex p-2 bg-gray-800 justify-between" key={index}>
+              <span className="text-white ">{tech}</span>
+              <input
+                type="checkbox"
+                checked={selectedInfra.includes(tech)}
+                onChange={handleCheckbox(selectedInfra, infraSelector, tech)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

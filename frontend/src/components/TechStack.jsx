@@ -14,7 +14,8 @@ function TechStack({
   backendSelector,
   databaseSelector,
   infraSelector,
-  loading
+  loading,
+  
 }) {
   const handleCheckbox = (selected, setter, tech) => e => {
     if (e.target.checked) {

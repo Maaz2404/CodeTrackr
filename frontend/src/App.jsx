@@ -3,9 +3,11 @@ import SideBar from "./components/SideBar"
 import Buttons from "./components/Buttons"
 import TechStack from "./components/TechStack"
 import Timeline from "./components/Timeline"
+import SignUp from "./components/SignUp"
 import { useState } from "react"
 import axios from "axios"
-
+'use client';
+import  {Spinner}  from '@/components/ui/shadcn-io/spinner';
 
 
 function App() {
@@ -23,6 +25,7 @@ function App() {
   const [selectedInfra, setSelectedInfra] = useState([]);
   const [hours,setHours] = useState(1)
   const [loadingStack, setLoadingStack] = useState(false);
+  const [techstackRendered, setTechstackRendered] = useState(false);
 
 
 
@@ -30,6 +33,7 @@ function App() {
 
   function fetchTeckStack() {
     setLoadingStack(true);
+    setTechstackRendered(false)
     axios.post(baseURL + "llm/",{
       "prompt":`${input}`
     }, {
@@ -42,6 +46,7 @@ function App() {
       setFrontend(data.frontend)
       setDatabase(data.database)
       setInfra(data.infra)
+      setTechstackRendered(true)
     }).catch((error)=>{
       console.error("There was an error fetching LLM response", error);
     }).finally(() => {
@@ -58,23 +63,24 @@ function App() {
         <SideBar/>
       </div>
       <div className=" w-full bg-gray-900 overflow-hidden">
-        <nav className="mb-5 text-2xl text-sky-500 bg-gray-950 p-2">Project Planner</nav>
+        <nav className="mb-5 text-2xl h-16 text-sky-500 bg-gray-950 p-2">
+          <SignUp/>
+        </nav>
         <h1 className="text-center text-5xl text-white my-5 text-shadow-2xs">What are you building today?</h1>
-        <ChatBox setInput={setInput}/>
+        <ChatBox setInput={setInput}input={input}/>
         <Buttons setInput={setInput} fetchTeckStack={fetchTeckStack}/>
         {loading && (
-            <div className="absolute inset-0 flex justify-center items-center z-50">
-              <div className="animate-spin w-24 h-24 border-8 border-t-8 border-gray-200 border-t-blue-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-xl absolute">Loading</span>
+            <div className="flex justify-center items-center">
+              <Spinner className="text-white text-center my-5 mx-auto"size={64}/>          
               </div>
-            </div>
           )}
         {!showTimeline && !loading  && (
         <><TechStack frontend={frontend} backend={backend} database={database} infra={infra} 
            selectedBackend={selectedBackend} selectedFrontend={selectedFrontend} selectedDatabase={selectedDatabase}
            selectedInfra={selectedInfra} frontendSelector={setSelectedFrontend} backendSelector={setSelectedBackend}
            databaseSelector={setSelectedDatabase} infraSelector={setSelectedInfra} loading={loadingStack} />
-        <div className="flex flex-col items-center my-5">
+         { techstackRendered && (<>
+          <div className="flex flex-col items-center my-5">
           <label className="text-white text-lg mx-5 text-center" htmlFor="slider">
             Hours per day
           </label>
@@ -122,6 +128,8 @@ function App() {
     Create timeline
   </button>
 </div>
+        </> )}  
+        
         </>
         )}
         {showTimeline && (

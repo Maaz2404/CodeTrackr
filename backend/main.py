@@ -1,11 +1,13 @@
 from fastapi import FastAPI
 from routes.llm.routes import router
+from routes.auth.routes import auth_router
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
 app.include_router(router,tags=["llm"])
+app.include_router(auth_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

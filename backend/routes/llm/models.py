@@ -25,4 +25,13 @@ class SingleTimelineDay(SQLModel):
         tasks: SingleDayTasks = Field("The tasks planned for that day")
     
 class CompleteTimeline(SQLModel):
+    title: str = Field("A concise project title")
     days: List[SingleTimelineDay] = Field("A list of all the days in the timeline")
+    
+class SingleTimelineResponse(SQLModel):
+    name: str = Field("The name of the project")
+    days: List[CompleteTimeline] = Field("A list of all the days in a single timeline")
+    
+class AllUserTimelineResponse(SQLModel):
+    timelines: List[SingleTimelineResponse] = Field("A list of all timelines for the user")        
+    

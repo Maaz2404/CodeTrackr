@@ -43,7 +43,8 @@ def create_timeline(stack: IncomingTechStack,model=model):
                  Each day should have:\n
                 - A title\n
                 - Clear, achievable summary of tasks\n
-                - Deliverables"""
+                - Deliverables\n
+                Also generate a concise name for the project"""
                 
     custom_model =   model.with_structured_output(CompleteTimeline)
     response = custom_model.invoke(prompt)

@@ -32,13 +32,15 @@ async def save_timeline(timeline: CompleteTimeline,db:db_dependency,user:user_de
     new_project = Project(name=title,user_id=user_id)
     project_id = new_project.id
     db.add(new_project)
+    print("saved the project")
     #add individual days into Day database table
     for day in days:
         new_day = Day(title=day.tasks.title,summary=day.tasks.summary,deliverables=day.tasks.deliverables,
                       project_id=project_id)
         db.add(new_day)
-        
+    print("Saved all days")    
     db.commit()
+    print("Everything saved successfully")
     return {"message":"Project saved successfully"}
     
 @router.get('/timelines', response_model=AllUserTimelineResponse)

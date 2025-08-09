@@ -4,7 +4,7 @@ import Buttons from "./components/Buttons"
 import TechStack from "./components/TechStack"
 import Timeline from "./components/Timeline"
 import SignUp from "./components/SignUp"
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import axios from "axios"
 'use client';
 import  {Spinner}  from '@/components/ui/shadcn-io/spinner';
@@ -26,10 +26,28 @@ function App() {
   const [hours,setHours] = useState(1)
   const [loadingStack, setLoadingStack] = useState(false);
   const [techstackRendered, setTechstackRendered] = useState(false);
-
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [projects,setProjects] = useState([])
+  const [title,setTitle] = useState("")
 
 
   const baseURL = "http://127.0.0.1:8000/";
+  useEffect(() => {
+  if (loggedIn) {
+    axios.get(baseURL + "llm/timelines", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+      }
+    })
+    .then((res) => {
+      console.log(res.data)
+      setProjects(res.data.timelines); // store in a state
+    })
+    .catch((err) => {
+      console.error("Error loading projects:", err);
+    });
+  }
+}, [loggedIn]); // runs whenever login status changes
 
   function fetchTeckStack() {
     setLoadingStack(true);
@@ -47,6 +65,7 @@ function App() {
       setDatabase(data.database)
       setInfra(data.infra)
       setTechstackRendered(true)
+      
     }).catch((error)=>{
       console.error("There was an error fetching LLM response", error);
     }).finally(() => {
@@ -60,11 +79,11 @@ function App() {
     <>
     <div className="min-h-screen flex">
       <div>
-        <SideBar/>
+        <SideBar projects={projects}/>
       </div>
       <div className=" w-full bg-gray-900 overflow-hidden">
         <nav className="mb-5 text-2xl h-16 text-sky-500 bg-gray-950 p-2">
-          <SignUp/>
+          <SignUp loggedIn={loggedIn} setloggedIn={setLoggedIn}/>
         </nav>
         <h1 className="text-center text-5xl text-white my-5 text-shadow-2xs">What are you building today?</h1>
         <ChatBox setInput={setInput}input={input}/>
@@ -115,7 +134,20 @@ function App() {
       .then((response) => {
         console.log("API timeline response:", response.data);
         setDays(response.data.days);
+        setTitle(response.data.title)
         setShowTimeline(true);
+        if (loggedIn){
+        axios.post(baseURL + 'llm/save_timeline',{
+          'days':response.data.days,
+          'title':response.data.title
+        },{
+          headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+      }
+        }).catch((error)=>{
+          console.error("There was an error saving the timeline: ", error);
+        })
+      }
       })
       .catch((error) => {
         console.error("There was an error fetching timeline", error);

@@ -22,7 +22,7 @@ async def create_user(db: db_dependency,request: CreateUserRequest):
     )
     existing_user = db.exec(select(User).where(User.username == request.username)).first()
     if existing_user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username already exists")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Username already exists")
     db.add(user)
     db.commit()
     

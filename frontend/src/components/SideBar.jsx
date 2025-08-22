@@ -1,7 +1,29 @@
-function SideBar({projects}) {
+import axios from 'axios'
+function SideBar({projects,setLoading,setDays,showTimeline}) {
+    const baseUrl = 'http://127.0.0.1:8000/'
+    function handleProjectButtonClick(id){
+        setLoading(true)
+        showTimeline(true)
+        
+            axios.get(baseUrl + `llm/timelines/${id}`,{
+                headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+      }
+      }).then((response)=>{
+        console.log(response.data)
+        const days = response.data
+        setDays(days)
+        setLoading(false)
+            }).catch((error) => {
+                console.log(error)
+                setLoading(false)
+            })
+        
+    }
+
     return(
-        <div>
-            <aside className="w-44   h-screen  bg-gray-950 p-4">
+        <div className='h-full'>
+            <aside className="w-44 h-full  bg-gray-950 p-4">
                 <h2 className="text-3xl  text-sky-500 mb-4">CodeTrackr</h2>
                 <div className="flex-row mt-10 px-2">
                     <h3 className="text-white">
@@ -12,8 +34,14 @@ function SideBar({projects}) {
                     </h3>
                     <ul className="text-white mt-3 flex flex-col items-center">
                         {projects.map((project) => (
-                            <li className="my-2" key={project.name}><button>
-                                {project.name}</button></li>
+                            <li className="my-2" key={project.id}>
+                                <button
+                                    className='bg-gray-500 border-2 border-gray-700 hover:bg-gray-600 p-1 max-h-10 min-w-full overflow-x-auto overflow-y-clip'
+                                    onClick={() => handleProjectButtonClick(project.id)}
+                                >
+                                    {project.name}
+                                </button>
+                            </li>
                         )
                         )}
                     </ul>

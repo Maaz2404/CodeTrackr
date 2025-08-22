@@ -79,7 +79,7 @@ function App() {
     <>
     <div className="min-h-screen flex">
       <div>
-        <SideBar projects={projects}/>
+        <SideBar projects={projects} setLoading={setLoading} setDays={setDays} showTimeline={setShowTimeline}/>
       </div>
       <div className=" w-full bg-gray-900 overflow-hidden">
         <nav className="mb-5 text-2xl h-16 text-sky-500 bg-gray-950 p-2">

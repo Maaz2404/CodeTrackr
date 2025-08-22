@@ -29,6 +29,7 @@ class CompleteTimeline(SQLModel):
     days: List[SingleTimelineDay] = Field("A list of all the days in the timeline")
     
 class SingleTimelineResponse(SQLModel):
+    id: str = Field("The unique id of the project from database")
     name: str = Field("The name of the project")
     days: List[CompleteTimeline] = Field("A list of all the days in a single timeline")
     

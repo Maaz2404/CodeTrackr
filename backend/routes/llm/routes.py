@@ -32,15 +32,15 @@ async def save_timeline(timeline: CompleteTimeline,db:db_dependency,user:user_de
     new_project = Project(name=title,user_id=user_id)
     project_id = new_project.id
     db.add(new_project)
-    print("saved the project")
+    
     #add individual days into Day database table
     for day in days:
         new_day = Day(title=day.tasks.title,summary=day.tasks.summary,deliverables=day.tasks.deliverables,
                       project_id=project_id)
         db.add(new_day)
-    print("Saved all days")    
+        
     db.commit()
-    print("Everything saved successfully")
+    
     return {"message":"Project saved successfully"}
     
 @router.get('/timelines', response_model=AllUserTimelineResponse)
@@ -74,6 +74,7 @@ async def get_timelines(db: db_dependency, user: user_dependency):
         )
 
         response_obj = SingleTimelineResponse(
+            id = project.id,
             name=project.name,
             days=[timeline]
         )
@@ -81,3 +82,17 @@ async def get_timelines(db: db_dependency, user: user_dependency):
         timelines.append(response_obj)
 
     return AllUserTimelineResponse(timelines=timelines)   
+
+@router.get('/timelines/{id}')
+async def get_single_timeline(id: str, db: db_dependency, user: user_dependency):
+    user_id = user['id']
+    project = db.exec(
+        select(Project).where(Project.id == id, Project.user_id == user_id)
+    ).first()
+    if not project:
+        return {"error": "Project not found"}
+    # project_id = project.id
+    # days = db.exec(select(Day).where(Day.id == project_id)).all()
+    days = project.days
+    return days
+    

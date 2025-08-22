@@ -31,7 +31,7 @@ function App() {
   const [title,setTitle] = useState("")
 
 
-  const baseURL = "http://127.0.0.1:8000/";
+  const baseURL = import.meta.env.VITE_BASE_URL
   useEffect(() => {
   if (loggedIn) {
     axios.get(baseURL + "llm/timelines", {

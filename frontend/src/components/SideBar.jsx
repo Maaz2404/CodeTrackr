@@ -1,6 +1,6 @@
 import axios from 'axios'
 function SideBar({projects,setLoading,setDays,showTimeline}) {
-    const baseUrl = 'http://127.0.0.1:8000/'
+    const baseUrl = import.meta.env.VITE_BASE_URL
     function handleProjectButtonClick(id){
         setLoading(true)
         showTimeline(true)

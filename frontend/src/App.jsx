@@ -119,6 +119,7 @@ function App() {
         setDays={setDays} 
         showTimeline={setShowTimeline}
         isOpen={sidebarOpen}
+        loggedIn={loggedIn}
         onClose={() => setSidebarOpen(false)}
       />
       

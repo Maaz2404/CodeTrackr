@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { X } from "lucide-react";
+import { FaPlus } from 'react-icons/fa';
 
-export default function SideBar({ projects, setLoading, setDays, showTimeline, isOpen, onClose }) {
+export default function SideBar({ projects, setLoading, setDays, showTimeline, isOpen, onClose, loggedIn }) {
   const baseUrl =  import.meta.env.VITE_BASE_URL
   function handleProjectButtonClick(id) {
     setLoading(true)
@@ -49,9 +50,18 @@ export default function SideBar({ projects, setLoading, setDays, showTimeline, i
 
         <h2 className="text-2xl lg:text-3xl text-sky-500 mb-4">CodeTrackr</h2>
         
-        <div className="flex-row mt-10 px-2">
-          <h3 className="text-white text-sm lg:text-base">New Project</h3>
-          <h3 className="text-white mt-4 text-sm lg:text-base">Saved Projects</h3>
+        <div className="flex-row mt-10 px-2 text-white">
+            <div className='flex items-center justify-between'><h3 className="text-white text-sm lg:text-base ">New Project</h3>
+            <FaPlus className="hover:cursor-pointer" onClick={()=>{
+                showTimeline(false)
+            }}/>
+            </div> 
+          
+          {!loggedIn && <p className='text-center mt-5 p-2 text-xl border-2'>
+            Log In to auto-save your project timeline</p>}
+          {loggedIn && 
+          <>
+          <h3 className="text-white mt-4 text-sm text-center font-bold lg:text-base ">Saved Projects</h3>
           
           <ul className="text-white mt-3 flex flex-col items-center">
             {projects.map((project) => (
@@ -65,6 +75,10 @@ export default function SideBar({ projects, setLoading, setDays, showTimeline, i
               </li>
             ))}
           </ul>
+          
+          
+          </>}
+          
         </div>
       </aside>
     </>

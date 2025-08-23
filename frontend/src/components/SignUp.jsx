@@ -59,7 +59,11 @@ function SignUp({ loggedIn, setloggedIn }) {
       setLoginPassword("");
     }
   };
-
+const handleLogout = () => {
+    localStorage.removeItem("accessToken"); // clear token
+    setloggedIn(false);
+    setLogButton("Log In");
+  };
   // Handle Signup
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
@@ -88,10 +92,12 @@ function SignUp({ loggedIn, setloggedIn }) {
 
   return (
     <div className="flex gap-3 justify-end items-center text-white text-md">
-      {/* Login Dialog */}
+      {/*Logout Button */}
+      {loggedIn && <button className="p-2 bg-gray-700 rounded-2xl" onClick={handleLogout}>{logButton}</button>}
+      {/* Login Button and Dialog */}
       <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
         <DialogTrigger asChild>
-          <button className="p-2 bg-gray-700 rounded-2xl">{logButton}</button>
+          {!loggedIn && <button className="p-2 bg-gray-700 rounded-2xl">{logButton}</button>}
         </DialogTrigger>
         <DialogContent className="text-white bg-gray-700">
           <DialogHeader>

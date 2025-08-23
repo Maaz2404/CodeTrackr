@@ -1,21 +1,23 @@
-'use client';
-import  {Spinner}  from '@/components/ui/shadcn-io/spinner';
+const Spinner = ({ size = 32, className = "" }) => (
+  <div className={`animate-spin rounded-full border-4 border-gray-300 border-t-blue-600 ${className}`} 
+       style={{ width: size, height: size }}>
+  </div>
+);
 
-function TechStack({
-  frontend,
-  backend,
-  database,
-  infra,
-  selectedFrontend,
-  selectedBackend,
-  selectedDatabase,
-  selectedInfra,
+export default function TechStack({
+  frontend = [],
+  backend = [],
+  database = [],
+  infra = [],
+  selectedFrontend = [],
+  selectedBackend = [],
+  selectedDatabase = [],
+  selectedInfra = [],
   frontendSelector,
   backendSelector,
   databaseSelector,
   infraSelector,
   loading,
-  
 }) {
   const handleCheckbox = (selected, setter, tech) => e => {
     if (e.target.checked) {
@@ -24,103 +26,45 @@ function TechStack({
       setter(selected.filter(item => item !== tech));
     }
   };
-  
+
+  const techSections = [
+    { title: "Frontend", data: frontend, selected: selectedFrontend, setter: frontendSelector },
+    { title: "Backend", data: backend, selected: selectedBackend, setter: backendSelector },
+    { title: "Database", data: database, selected: selectedDatabase, setter: databaseSelector },
+    { title: "Infra", data: infra, selected: selectedInfra, setter: infraSelector }
+  ];
 
   return (
-    <div className="flex items-center justify-center mt-5 gap-4">
-      {/* Frontend */}
-      <div className="p-3 h-52 w-48 bg-gray-950 rounded-2xl flex flex-col">
-        <h3 className="text-white text-center mb-3">Frontend</h3>
-        {loading && (
-            <div className='flex justify-center text-amber-50 items-center h-full'>
-              
-              <Spinner />
-            </div>
-          )}
-
-        <div className="flex-1 flex flex-col overflow-y-auto">
-          
-          {frontend && frontend.map((tech, index) => (
-            <div className="flex p-2 bg-gray-800 justify-between" key={index}>
-              <span className="text-white flex overflow-x-auto">{tech}</span>
-              <input
-                type="checkbox"
-                checked={selectedFrontend.includes(tech)}
-                onChange={handleCheckbox(selectedFrontend, frontendSelector, tech)}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-      {/* Backend */}
-      <div className="p-3 h-52 w-48 bg-gray-950 rounded-2xl flex flex-col">
-        <h3 className="text-white text-center mb-3">Backend</h3>
-        {loading && (
-            <div className='flex justify-center text-amber-50 items-center h-full'>
-              
-              <Spinner />
-            </div>
-          )}
-        <div className="flex-1 flex flex-col overflow-y-auto">
-          {backend && backend.map((tech, index) => (
-            <div className="flex p-2 bg-gray-800 justify-between" key={index}>
-              <span className="text-white">{tech}</span>
-              <input
-                type="checkbox"
-                checked={selectedBackend.includes(tech)}
-                onChange={handleCheckbox(selectedBackend, backendSelector, tech)}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-      {/* Database */}
-      <div className="p-3 h-52 w-48 bg-gray-950 rounded-2xl flex flex-col">
-        <h3 className="text-white text-center mb-3">Database</h3>
-        {loading && (
-            <div className='flex justify-center text-amber-50 items-center h-full'>
-              
-              <Spinner />
-            </div>
-          )}
-        <div className="flex-1 flex flex-col overflow-y-auto">
-          
-          {database && database.map((tech, index) => (
-            <div className="flex p-2 bg-gray-800 justify-between" key={index}>
-              <span className="text-white">{tech}</span>
-              <input
-                type="checkbox"
-                checked={selectedDatabase.includes(tech)}
-                onChange={handleCheckbox(selectedDatabase, databaseSelector, tech)}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-      {/* Infra */}
-      <div className="p-3 h-52 w-48 bg-gray-950 rounded-2xl flex flex-col">
-        <h3 className="text-white text-center mb-3">Infra</h3>
-        {loading && (
-            <div className='flex justify-center text-amber-50 items-center h-full'>
-              
-              <Spinner />
-            </div>
-          )}
-        <div className="flex-1 flex flex-col overflow-y-auto">
-          {infra && infra.map((tech, index) => (
-            <div className="flex p-2 bg-gray-800 justify-between" key={index}>
-              <span className="text-white ">{tech}</span>
-              <input
-                type="checkbox"
-                checked={selectedInfra.includes(tech)}
-                onChange={handleCheckbox(selectedInfra, infraSelector, tech)}
-              />
-            </div>
-          ))}
-        </div>
+    <div className="px-4 mt-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+        {techSections.map((section, index) => (
+          <div key={index} className="p-3 h-52 bg-gray-950 rounded-2xl flex flex-col">
+            <h3 className="text-white text-center mb-3 text-sm sm:text-base font-semibold">
+              {section.title}
+            </h3>
+            
+            {loading ? (
+              <div className="flex justify-center items-center h-full">
+                <Spinner size={32} />
+              </div>
+            ) : (
+              <div className="flex-1 flex flex-col overflow-y-auto space-y-1">
+                {section.data.map((tech, techIndex) => (
+                  <div className="flex p-2 bg-gray-800 justify-between items-center rounded" key={techIndex}>
+                    <span className="text-white text-sm flex-1 truncate pr-2">{tech}</span>
+                    <input
+                      type="checkbox"
+                      className="flex-shrink-0"
+                      checked={section.selected.includes(tech)}
+                      onChange={handleCheckbox(section.selected, section.setter, tech)}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
 }
-
-export default TechStack;
